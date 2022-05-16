@@ -1,0 +1,260 @@
+zabbix_export:
+  version: '5.2'
+  date: '2022-05-16T14:52:20Z'
+  groups:
+    -
+      name: EASTRON
+    -
+      name: 'Power meter'
+  templates:
+    -
+      template: SDM220-Modbus
+      name: SDM220-Modbus
+      description: |
+        Single Phose Energy Meter
+        230V AC 0.25-5(100)A AC 50/60Hz
+        1000imp/kWh IEC62053-21 Cl.1
+      groups:
+        -
+          name: EASTRON
+        -
+          name: 'Power meter'
+      items:
+        -
+          name: 'Export active energy'
+          type: DEPENDENT
+          key: Aminus
+          delay: '0'
+          value_type: FLOAT
+          units: kwh
+          description: 'Export active energy'
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.74
+          master_item:
+            key: 'modbus_read[{$MODBUS_PORT},{$MODBUS_SLAVE},70,4,5*float]'
+        -
+          name: 'Phase angle'
+          type: DEPENDENT
+          key: Angle
+          delay: '0'
+          value_type: FLOAT
+          units: Degree
+          description: 'Power Factor'
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.36
+          master_item:
+            key: 'modbus_read[{$MODBUS_PORT},{$MODBUS_SLAVE},0,4,20*float]'
+        -
+          name: 'Import active energy'
+          type: DEPENDENT
+          key: Aplus
+          delay: '0'
+          value_type: FLOAT
+          units: kwh
+          description: 'Import active energy'
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.72
+          master_item:
+            key: 'modbus_read[{$MODBUS_PORT},{$MODBUS_SLAVE},70,4,5*float]'
+        -
+          name: Frequency
+          type: DEPENDENT
+          key: f
+          delay: '0'
+          value_type: FLOAT
+          units: Hz
+          description: 'Active power'
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.70
+          master_item:
+            key: 'modbus_read[{$MODBUS_PORT},{$MODBUS_SLAVE},70,4,5*float]'
+        -
+          name: Current
+          type: DEPENDENT
+          key: I
+          delay: '0'
+          value_type: FLOAT
+          units: Amps
+          description: Current.
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.6
+          master_item:
+            key: 'modbus_read[{$MODBUS_PORT},{$MODBUS_SLAVE},0,4,20*float]'
+        -
+          name: request1
+          type: SIMPLE
+          key: 'modbus_read[{$MODBUS_PORT},{$MODBUS_SLAVE},0,4,20*float]'
+          trends: '0'
+          value_type: TEXT
+        -
+          name: request2
+          type: SIMPLE
+          key: 'modbus_read[{$MODBUS_PORT},{$MODBUS_SLAVE},70,4,5*float]'
+          trends: '0'
+          value_type: TEXT
+        -
+          name: request3
+          type: SIMPLE
+          key: 'modbus_read[{$MODBUS_PORT},{$MODBUS_SLAVE},342,4,2*float]'
+          trends: '0'
+          value_type: TEXT
+        -
+          name: 'Active power'
+          type: DEPENDENT
+          key: P
+          delay: '0'
+          value_type: FLOAT
+          units: Watts
+          description: 'Active power'
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.12
+          master_item:
+            key: 'modbus_read[{$MODBUS_PORT},{$MODBUS_SLAVE},0,4,20*float]'
+        -
+          name: 'Power Factor'
+          type: DEPENDENT
+          key: PF
+          delay: '0'
+          value_type: FLOAT
+          description: 'Power Factor'
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.30
+          master_item:
+            key: 'modbus_read[{$MODBUS_PORT},{$MODBUS_SLAVE},0,4,20*float]'
+        -
+          name: 'Reactive power'
+          type: DEPENDENT
+          key: Q
+          delay: '0'
+          value_type: FLOAT
+          units: VAr
+          description: 'Reactive power'
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.24
+          master_item:
+            key: 'modbus_read[{$MODBUS_PORT},{$MODBUS_SLAVE},0,4,20*float]'
+        -
+          name: 'Export reactive energy'
+          type: DEPENDENT
+          key: Rminus
+          delay: '0'
+          value_type: FLOAT
+          units: kvarh
+          description: 'Export reactive energy'
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.78
+          master_item:
+            key: 'modbus_read[{$MODBUS_PORT},{$MODBUS_SLAVE},70,4,5*float]'
+        -
+          name: 'Import reactive energy'
+          type: DEPENDENT
+          key: Rplus
+          delay: '0'
+          value_type: FLOAT
+          units: kvarh
+          description: 'Import reactive energy'
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.76
+          master_item:
+            key: 'modbus_read[{$MODBUS_PORT},{$MODBUS_SLAVE},70,4,5*float]'
+        -
+          name: 'Apparent power'
+          type: DEPENDENT
+          key: S
+          delay: '0'
+          value_type: FLOAT
+          units: VoltAmps
+          description: 'Apparent power'
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.18
+          master_item:
+            key: 'modbus_read[{$MODBUS_PORT},{$MODBUS_SLAVE},0,4,20*float]'
+        -
+          name: 'Total active energy'
+          type: DEPENDENT
+          key: TotalP
+          delay: '0'
+          value_type: FLOAT
+          units: kwh
+          description: 'Total active energy'
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.342
+          master_item:
+            key: 'modbus_read[{$MODBUS_PORT},{$MODBUS_SLAVE},342,4,2*float]'
+        -
+          name: 'Total reactive energy'
+          type: DEPENDENT
+          key: TotalQ
+          delay: '0'
+          value_type: FLOAT
+          units: kvarh
+          description: 'Total reactive energy'
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.344
+          master_item:
+            key: 'modbus_read[{$MODBUS_PORT},{$MODBUS_SLAVE},342,4,2*float]'
+        -
+          name: Voltage
+          type: DEPENDENT
+          key: U
+          delay: '0'
+          value_type: FLOAT
+          units: Volts
+          description: 'Line to neutral volts.'
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.0
+          master_item:
+            key: 'modbus_read[{$MODBUS_PORT},{$MODBUS_SLAVE},0,4,20*float]'
+      macros:
+        -
+          macro: '{$MODBUS_PORT}'
+          value: 'enc://127.0.0.1:4001'
+        -
+          macro: '{$MODBUS_SLAVE}'
+          value: '101'
+          description: 'Modbus UID'
+        -
+          macro: '{$NODATA_PERIOD}'
+          value: '600'

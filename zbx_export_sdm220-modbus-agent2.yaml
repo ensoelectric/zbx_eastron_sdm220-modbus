@@ -1,0 +1,277 @@
+zabbix_export:
+  version: '5.4'
+  date: '2022-05-16T14:49:52Z'
+  groups:
+    -
+      uuid: f4df54a09b114b248dd2cacdd6d32fad
+      name: EASTRON
+    -
+      uuid: 2d5d527ca06e42bdb4f75090c2e81d4a
+      name: 'Power meter'
+  templates:
+    -
+      uuid: 452d97233c7b44f392c8eddf663efb7a
+      template: SDM220-Modbus-agent2
+      name: SDM220-Modbus-agent2
+      description: |
+        Single Phose Energy Meter
+        230V AC 0.25-5(100)A AC 50/60Hz
+        1000imp/kWh IEC62053-21 Cl.1
+      groups:
+        -
+          name: EASTRON
+        -
+          name: 'Power meter'
+      items:
+        -
+          uuid: 72955f88de794c17a1690b47eb7acee9
+          name: 'Export active energy'
+          type: DEPENDENT
+          key: Aminus
+          delay: '0'
+          value_type: FLOAT
+          units: kwh
+          description: 'Export active energy'
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - '$.[2]'
+          master_item:
+            key: 'modbus.get[{$MODBUS_PORT},{$MODBUS_SLAVE},4,70,5,float]'
+        -
+          uuid: 29b50b306e4f429faa1f7cf6b1b3e17c
+          name: 'Phase angle'
+          type: DEPENDENT
+          key: Angle
+          delay: '0'
+          value_type: FLOAT
+          units: Degree
+          description: 'Power Factor'
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - '$.[18]'
+          master_item:
+            key: 'modbus.get[{$MODBUS_PORT},{$MODBUS_SLAVE},4,0,20,float]'
+        -
+          uuid: 144e9968d1ef47e39262cdee9c0a392f
+          name: 'Import active energy'
+          type: DEPENDENT
+          key: Aplus
+          delay: '0'
+          value_type: FLOAT
+          units: kwh
+          description: 'Import active energy'
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - '$.[1]'
+          master_item:
+            key: 'modbus.get[{$MODBUS_PORT},{$MODBUS_SLAVE},4,70,5,float]'
+        -
+          uuid: 13a72ab3dbf74b88951b82d422c8f00c
+          name: Frequency
+          type: DEPENDENT
+          key: f
+          delay: '0'
+          value_type: FLOAT
+          units: Hz
+          description: 'Active power'
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - '$.[0]'
+          master_item:
+            key: 'modbus.get[{$MODBUS_PORT},{$MODBUS_SLAVE},4,70,5,float]'
+        -
+          uuid: 40ef7b86a87a4e798142197b5c069881
+          name: Current
+          type: DEPENDENT
+          key: I
+          delay: '0'
+          value_type: FLOAT
+          units: Amps
+          description: Current.
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - '$.[3]'
+          master_item:
+            key: 'modbus.get[{$MODBUS_PORT},{$MODBUS_SLAVE},4,0,20,float]'
+        -
+          uuid: 4ce9d1b0be7d4278899aca526c084eee
+          name: request1
+          key: 'modbus.get[{$MODBUS_PORT},{$MODBUS_SLAVE},4,0,20,float]'
+          trends: '0'
+          value_type: TEXT
+        -
+          uuid: cd4070e891374a918cf3568f0e581081
+          name: request2
+          key: 'modbus.get[{$MODBUS_PORT},{$MODBUS_SLAVE},4,70,5,float]'
+          trends: '0'
+          value_type: TEXT
+        -
+          uuid: 7f03e675220a4796a0f64c680a69fb4e
+          name: request3
+          key: 'modbus.get[{$MODBUS_PORT},{$MODBUS_SLAVE},4,342,2,float]'
+          trends: '0'
+          value_type: TEXT
+        -
+          uuid: b0b68d644bbb402dbcfac6304c049ab1
+          name: 'Active power'
+          type: DEPENDENT
+          key: P
+          delay: '0'
+          value_type: FLOAT
+          units: Watts
+          description: 'Active power'
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - '$.[6]'
+          master_item:
+            key: 'modbus.get[{$MODBUS_PORT},{$MODBUS_SLAVE},4,0,20,float]'
+        -
+          uuid: 37f8ec277bde491c9efb87e27e568dd7
+          name: 'Power Factor'
+          type: DEPENDENT
+          key: PF
+          delay: '0'
+          value_type: FLOAT
+          description: 'Power Factor'
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - '$.[15]'
+          master_item:
+            key: 'modbus.get[{$MODBUS_PORT},{$MODBUS_SLAVE},4,0,20,float]'
+        -
+          uuid: 51ecfd980cb4483f8922eb27fbb95d81
+          name: 'Reactive power'
+          type: DEPENDENT
+          key: Q
+          delay: '0'
+          value_type: FLOAT
+          units: VAr
+          description: 'Reactive power'
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - '$.[12]'
+          master_item:
+            key: 'modbus.get[{$MODBUS_PORT},{$MODBUS_SLAVE},4,0,20,float]'
+        -
+          uuid: c0d2edc5969e47cc8149705936d2825a
+          name: 'Export reactive energy'
+          type: DEPENDENT
+          key: Rminus
+          delay: '0'
+          value_type: FLOAT
+          units: kvarh
+          description: 'Export reactive energy'
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - '$.[4]'
+          master_item:
+            key: 'modbus.get[{$MODBUS_PORT},{$MODBUS_SLAVE},4,70,5,float]'
+        -
+          uuid: aa1cb003156744b48e8e0840b3343b06
+          name: 'Import reactive energy'
+          type: DEPENDENT
+          key: Rplus
+          delay: '0'
+          value_type: FLOAT
+          units: kvarh
+          description: 'Import reactive energy'
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - '$.[3]'
+          master_item:
+            key: 'modbus.get[{$MODBUS_PORT},{$MODBUS_SLAVE},4,70,5,float]'
+        -
+          uuid: a690e8696aa3414d9692c5c3a5ce3ca4
+          name: 'Apparent power'
+          type: DEPENDENT
+          key: S
+          delay: '0'
+          value_type: FLOAT
+          units: VoltAmps
+          description: 'Apparent power'
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - '$.[9]'
+          master_item:
+            key: 'modbus.get[{$MODBUS_PORT},{$MODBUS_SLAVE},4,0,20,float]'
+        -
+          uuid: 2b0094b66ae248c0b94a65312d4ce576
+          name: 'Total active energy'
+          type: DEPENDENT
+          key: TotalP
+          delay: '0'
+          value_type: FLOAT
+          units: kwh
+          description: 'Total active energy'
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - '$.[0]'
+          master_item:
+            key: 'modbus.get[{$MODBUS_PORT},{$MODBUS_SLAVE},4,342,2,float]'
+        -
+          uuid: 1c17b506c2d44b19848de527170c76a1
+          name: 'Total reactive energy'
+          type: DEPENDENT
+          key: TotalQ
+          delay: '0'
+          value_type: FLOAT
+          units: kvarh
+          description: 'Total reactive energy'
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - '$.[1]'
+          master_item:
+            key: 'modbus.get[{$MODBUS_PORT},{$MODBUS_SLAVE},4,342,2,float]'
+        -
+          uuid: b7fafc9508b84227bcfba492590370c8
+          name: Voltage
+          type: DEPENDENT
+          key: U
+          delay: '0'
+          value_type: FLOAT
+          units: Volts
+          description: 'Line to neutral volts.'
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - '$.[0]'
+          master_item:
+            key: 'modbus.get[{$MODBUS_PORT},{$MODBUS_SLAVE},4,0,20,float]'
+      macros:
+        -
+          macro: '{$MODBUS_PORT}'
+          value: 'rtu://ttyr01:9600'
+        -
+          macro: '{$MODBUS_SLAVE}'
+          value: '5'
+          description: 'Modbus UID'
+        -
+          macro: '{$NODATA_PERIOD}'
+          value: '600'
